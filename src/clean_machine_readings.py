@@ -12,7 +12,7 @@ This script:
 8. Saves a separate cleaned CSV and a text cleaning report.
 
 Run:
-    python clean_machine_readings.py
+    python src/clean_machine_readings.py   (from the repo root)
 
 The original CSV is never overwritten.
 """
@@ -24,12 +24,13 @@ import numpy as np
 # ------------------------------------------------------------
 # STEP 0: Define input and output file locations
 # ------------------------------------------------------------
-# The script expects the original CSV to be in the same folder
-# as this Python file. Output files are also saved in this folder.
+# The script lives in <repo>/src/. The original CSV is read from
+# <repo>/data/ and output files are also saved in <repo>/data/.
 BASE_DIR = Path(__file__).resolve().parent
-INPUT_FILE = BASE_DIR / "proj_machine_readings.csv"
-OUTPUT_FILE = BASE_DIR / "cleaned_machine_readings.csv"
-REPORT_FILE = BASE_DIR / "data_cleaning_output.txt"
+DATA_DIR = BASE_DIR.parent / "data"
+INPUT_FILE = DATA_DIR / "proj_machine_readings.csv"
+OUTPUT_FILE = DATA_DIR / "cleaned_machine_readings.csv"
+REPORT_FILE = DATA_DIR / "data_cleaning_output.txt"
 
 
 def log(message, report_lines):
@@ -52,7 +53,7 @@ def main():
     if not INPUT_FILE.exists():
         raise FileNotFoundError(
             f"Input file not found: {INPUT_FILE}\n"
-            "Place proj_machine_readings.csv in the same folder as this script."
+            "Place proj_machine_readings.csv in the repo's data/ folder."
         )
 
     df = pd.read_csv(INPUT_FILE)
