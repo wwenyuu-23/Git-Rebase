@@ -32,6 +32,11 @@ INPUT_FILE = DATA_DIR / "proj_machine_readings.csv"
 OUTPUT_FILE = DATA_DIR / "cleaned_machine_readings.csv"
 REPORT_FILE = DATA_DIR / "data_cleaning_output.txt"
 
+# Raw timestamps are day-first (e.g. 15/1/2025 19:33). Without an explicit
+# format pandas guesses month-first, which turns day > 12 into NaT and
+# silently swaps day/month for the rest.
+TIMESTAMP_FORMAT = "%d/%m/%Y %H:%M"   # raw timestamps are day-first, e.g. 15/1/2025 19:33
+
 
 def log(message, report_lines):
     """Print a message and also store it for the text report."""
@@ -219,11 +224,12 @@ def main():
     # --------------------------------------------------------
     # Convert timestamp strings into datetime values so time-based
     # analysis and feature extraction can be performed later.
-    invalid_timestamps_before = int(pd.to_datetime(
-        df["timestamp"], errors="coerce"
-    ).isna().sum())
+    parsed_timestamps = pd.to_datetime(
+        df["timestamp"], format=TIMESTAMP_FORMAT, errors="coerce"
+    )
+    invalid_timestamps_before = int(parsed_timestamps.isna().sum())
 
-    df["timestamp"] = pd.to_datetime(df["timestamp"], errors="coerce")
+    df["timestamp"] = parsed_timestamps
 
     log("\nSTEP 7 - TIMESTAMP CONVERSION", report_lines)
     log("Converted timestamp to pandas datetime.", report_lines)
