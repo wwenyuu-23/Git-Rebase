@@ -1,0 +1,9 @@
+services:
+  dev:
+    build: .
+    image: egt309-dev
+    container_name: egt309-dev
+    ports:
+      - "127.0.0.1:8888:8888"   # only reachable from your own computer
+    volumes:
+      - .:/app                  # edits on your laptop show up inside the container

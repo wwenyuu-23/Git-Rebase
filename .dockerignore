@@ -1,0 +1,7 @@
+.git
+.venv
+venv
+__MACOSX
+__pycache__
+.ipynb_checkpoints
+*.pyc
